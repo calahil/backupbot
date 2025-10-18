@@ -54,15 +54,12 @@ while true; do
       echo "[INFO] Backing up container: $NAME ($container)"
 
       # Try to dump as postgres, fallback to root
-      if docker exec -u postgres "$container" pg_dumpall >"$FILE" 2>/tmp/pg_backup_error.log; then
+      if docker exec -u postgres -e PGUSER=postgres "$container" pg_dumpall -U postgres >"$FILE" 2>/tmp/pg_backup_error.log; then
         echo "[SUCCESS] Backup complete for $NAME -> $FILE"
-      elif docker exec "$container" pg_dumpall >"$FILE" 2>/tmp/pg_backup_error.log; then
-        echo "[SUCCESS] Backup complete for $NAME (fallback user) -> $FILE"
       else
         echo "[ERROR] Backup failed for $NAME (check /tmp/pg_backup_error.log)"
         rm -f "$FILE"
       fi
-
       # Retention cleanup
       find "$CONTAINER_BACKUP_DIR" -type f -mtime +$RETENTION_DAYS -name '*.sql' -delete
     done
