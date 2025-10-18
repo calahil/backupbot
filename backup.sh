@@ -53,8 +53,9 @@ while true; do
       mkdir -p "$CONTAINER_BACKUP_DIR"
 
       echo "[INFO] Backing up container: $NAME ($container)"
+      PG_USER=$(docker inspect --format '{{range .Config.Env}}{{println .}}{{end}}' "$container" | grep POSTGRES_USER | cut -d= -f2)
       PG_PASS=$(docker inspect --format '{{range .Config.Env}}{{println .}}{{end}}' "$container" | grep POSTGRES_PASSWORD | cut -d= -f2)
-      if docker exec -e PGPASSWORD="$PG_PASS" "$container" pg_dumpall -U postgres -h 127.0.0.1 >"$FILE" 2>/tmp/pg_backup_error.log; then
+      if docker exec -e PGPASSWORD="$PG_PASS" "$container" pg_dumpall -U "$PG_USER" -h 127.0.0.1 >"$FILE" 2>/tmp/pg_backup_error.log; then
         echo "[SUCCESS] Backup complete for $NAME -> $FILE"
       else
         echo "[ERROR] Backup failed for $NAME (check /tmp/pg_backup_error.log)"
