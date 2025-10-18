@@ -51,14 +51,13 @@ while true; do
       FILE="$CONTAINER_BACKUP_DIR/${TIMESTAMP}.sql"
 
       mkdir -p "$CONTAINER_BACKUP_DIR"
-      echo "[INFO] Backing up container: $NAME ($container)"
 
-      # Try to dump as postgres, fallback to root
-      if docker exec -u postgres -e PGUSER=postgres "$container" pg_dumpall -U postgres >"$FILE" 2>/tmp/pg_backup_error.log; then
+      echo "[INFO] Backing up container: $NAME ($container)"
+      PG_PASS=$(docker inspect --format '{{range .Config.Env}}{{println .}}{{end}}' "$container" | grep POSTGRES_PASSWORD | cut -d= -f2)
+      if docker exec -e PGPASSWORD="$PG_PASS" "$container" pg_dumpall -U postgres -h 127.0.0.1 >"$FILE" 2>/tmp/pg_backup_error.log; then
         echo "[SUCCESS] Backup complete for $NAME -> $FILE"
       else
         echo "[ERROR] Backup failed for $NAME (check /tmp/pg_backup_error.log)"
-        rm -f "$FILE"
       fi
       # Retention cleanup
       find "$CONTAINER_BACKUP_DIR" -type f -mtime +$RETENTION_DAYS -name '*.sql' -delete
