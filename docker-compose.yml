@@ -1,0 +1,12 @@
+services:
+  backupbot:
+    image: gitea.calahilstudios.com/calahil/backupbot
+    container_name: backupbot
+    environment:
+      - TZ=Etc/UTC
+    volumes:
+      # Backup folder to store dumps (accessible by Duplicati)
+      - /srv/backups/postgres:/backups
+      # Docker socket to list containers
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    restart: unless-stopped
