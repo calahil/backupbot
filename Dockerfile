@@ -7,6 +7,8 @@ RUN apt-get update -y \
   && apt-get install -y --no-install-recommends \
   ca-certificates \
   curl \
+  gnupg \
+  lsb-release \
   #&& rm -rf /var/lib/apt/lists/* \
   && install -m 0755 -d /etc/apt/keyrings \
   && curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc \
@@ -26,16 +28,8 @@ RUN apt-get update -y \
 
 # Copy backup script
 COPY backup.sh /usr/local/bin/backup.sh
-RUN chmod +x /usr/local/bin/backup.sh
-
-COPY backup.cron /etc/cron.d/backup
-RUN chmod 0644 /etc/cron.d/backup \
-  && crontab /etc/cron.d/backup
-
-
-COPY startup.sh /usr/local/bin/startup.sh 
-RUN chmod +x /usr/local/bin/startup.sh
-
-# Use bash as default
-ENTRYPOINT ["/usr/local/bin/startup.sh"]
+RUN chmod +x /usr/local/bin/backup.sh \
+  && mkdir -p /etc/services.d/backupbot
+COPY services/backupbot/run /etc/services.d/backupbot/run
+RUN chmod +x /etc/services.d/backupbot/run
 

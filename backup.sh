@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 # === Postgres Auto Backup Script ===
 # Description: Detects Postgres containers by known image names and runs pg_dumpall.
 # Author: Calahil Studios
@@ -18,12 +18,12 @@ ghcr.io/immich-app/postgres:14-vectorchord0.4.3-pgvectors0.2.0
 EOF
 )
 
-echo "[INFO] Starting PostgreSQL backup service..."
+echo "[BACKUPBOT_INFO] Starting PostgreSQL backup service..."
 mkdir -p "$BACKUP_DIR"
 
 TIMESTAMP=$(date +'%Y-%m-%d_%H-%M-%S')
-echo "[INFO] $(date) - Starting backup cycle ($TIMESTAMP)"
-echo "[INFO] Checking for running Postgres containers..."
+echo "[BACKUPBOT_INFO] $(date) - Starting backup cycle ($TIMESTAMP)"
+echo "[BACKUPBOT_INFO] Checking for running Postgres containers..."
 
 # Find running containers matching known image names
 MATCHING_CONTAINERS=$(
@@ -40,7 +40,7 @@ MATCHING_CONTAINERS=$(
 )
 
 if [ -z "$MATCHING_CONTAINERS" ]; then
-  echo "[WARN] No Postgres containers found."
+  echo "[BACKUPBOT_WARN] No Postgres containers found."
 else
   for container in $MATCHING_CONTAINERS; do
     NAME=$(docker inspect --format '{{.Name}}' "$container" | sed 's#^/##')
@@ -49,20 +49,20 @@ else
 
     mkdir -p "$CONTAINER_BACKUP_DIR"
 
-    echo "[INFO] Backing up container: $NAME ($container)"
+    echo "[BACKUPBOT_INFO] Backing up container: $NAME ($container)"
     PG_USER=$(docker inspect --format '{{range .Config.Env}}{{println .}}{{end}}' "$container" | grep POSTGRES_USER | cut -d= -f2)
     PG_PASS=$(docker inspect --format '{{range .Config.Env}}{{println .}}{{end}}' "$container" | grep POSTGRES_PASSWORD | cut -d= -f2)
     if docker exec -e PGPASSWORD="$PG_PASS" "$container" pg_dumpall -U "$PG_USER" -h 127.0.0.1 >"$FILE" 2>/tmp/pg_backup_error.log; then
-      echo "[SUCCESS] Backup complete for $NAME -> $FILE"
+      echo "[BACKUPBOT_SUCCESS] Backup complete for $NAME -> $FILE"
     else
-      echo "[ERROR] Backup failed for $NAME (check /tmp/pg_backup_error.log)"
+      echo "[BACKUPBOT_ERROR] Backup failed for $NAME (check /tmp/pg_backup_error.log)"
     fi
     # Retention cleanup
     find "$CONTAINER_BACKUP_DIR" -type f -mtime +$RETENTION_DAYS -name '*.sql' -delete
   done
 fi
 
-echo "[INFO] Creating a snapshot of /srv/appdata"
+echo "[BACKUPBOT_INFO] Creating a snapshot of /srv/appdata"
 btrfs subvolume snapshot -r /source/appdata /backups/snapshots/$(hostname)-$(date +%F)
 
-echo "[INFO] Backup cycle complete."
+echo "[BACKUPBOT_INFO] Backup cycle complete."
