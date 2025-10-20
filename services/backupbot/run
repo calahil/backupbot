@@ -1,27 +1,72 @@
 #!/usr/bin/with-contenv bash
 set -e
+# Source env if available
+if [[ -f /config/backupbot.env ]]; then
+  export $(grep -v '^#' /config/backupbot.env | xargs)
+fi
 
-echo "[BACKUPBOT_INFO] Starting PostgreSQL backup loop service..."
+# Start Python HTTP server for web config in background
+cd /config/web
+nohup python3 -m http.server 8080 --cgi >/config/log/web.log 2>&1 &
 
-INTERVAL_HOURS="${INTERVAL_HOURS:-24}"
+# Start backup scheduler
 STATE_FILE="/config/last_backup_date"
 LOG_FILE="/config/log/pgbackup.log"
-
 mkdir -p "$(dirname "$STATE_FILE")" "$(dirname "$LOG_FILE")"
 
+# TZ
+: "${TZ:=UTC}"
+export TZ
+
+# Retry config
+RETRIES=3
+GOTIFY_URL="${GOTIFY_URL:-}"
+GOTIFY_TOKEN="${GOTIFY_TOKEN:-}"
+
+# Helper: seconds until next 3AM
+seconds_until_next_3am() {
+  local now next_3am
+  now=$(date +%s)
+  next_3am=$(date -d "today 03:00" +%s)
+  ((now >= next_3am)) && next_3am=$(date -d "tomorrow 03:00" +%s)
+  echo $((next_3am - now))
+}
+
+# Run backup with retries
+run_backup() {
+  local attempt=1
+  while ((attempt <= RETRIES)); do
+    echo "[INFO] Backup attempt $attempt"
+    if /usr/local/bin/backup.sh >>"$LOG_FILE" 2>&1; then
+      echo "[SUCCESS] Backup completed"
+      return 0
+    else
+      echo "[WARN] Backup failed on attempt $attempt"
+      ((attempt++))
+      sleep 5
+    fi
+  done
+  # Send Gotify notification if configured
+  if [[ -n "$GOTIFY_URL" && -n "$GOTIFY_TOKEN" ]]; then
+    curl -s -X POST "$GOTIFY_URL/message?token=$GOTIFY_TOKEN" \
+      -F "title=Backup Failed" \
+      -F "message=PostgreSQL backup failed after $RETRIES attempts" \
+      -F "priority=5"
+  fi
+  return 1
+}
+
+# Main loop
 while true; do
   TODAY=$(date +%F)
-
-  # Check if a backup already ran today
   if [[ -f "$STATE_FILE" && "$(cat "$STATE_FILE")" == "$TODAY" ]]; then
-    echo "[BACKUPBOT_INFO] Backup already completed today ($TODAY). Skipping."
+    echo "[INFO] Backup already done for $TODAY"
   else
-    echo "[BACKUPBOT_INFO] Triggering backup.sh at $(date)"
-    /usr/local/bin/backup.sh "$LOG_FILE"
-    echo "$TODAY" >"$STATE_FILE"
-    echo "[BACKUPBOT_INFO] Backup completed and date recorded."
+    echo "[INFO] Running backup for $TODAY"
+    if run_backup; then
+      echo "$TODAY" >"$STATE_FILE"
+    fi
   fi
-
-  echo "[BACKUPBOT_INFO] Sleeping for $INTERVAL_HOURS hours..."
-  sleep "${INTERVAL_HOURS}h"
+  SECONDS_TO_WAIT=$(seconds_until_next_3am)
+  sleep "$SECONDS_TO_WAIT"
 done

@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    runs-on: prodesk 
+    runs-on: prodesk
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -30,6 +30,5 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: |
-            gitea.calahilstudios.com/${{ github.repository_owner }}/${{ github.event.repository.name }}:latest
+            gitea.calahilstudios.com/${{ github.repository_owner }}/${{ github.event.repository.name }}:develop
             gitea.calahilstudios.com/${{ github.repository_owner }}/${{ github.event.repository.name }}:${{ github.sha }}
-

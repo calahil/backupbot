@@ -6,20 +6,18 @@ services:
     environment:
       - PUID=0
       - PGID=0
-      - TZ=Etc/UTC
+      - TZ=America/Los_Angeles
       - SETTINGS_ENCRYPTION_KEY=${KEY}
       - CLI_ARGS= #optional
       - DUPLICATI__WEBSERVICE_PASSWORD=${PASSWORD}
     volumes:
       # Config dir for duplicati
       - /srv/appdata/duplicati/config:/config
-      # Backup folder to store dumps/backups
+      # Backup folder to store dumps/backups/snapshots
       - /srv/backups:/backups
-      # Local docker config dirs
-      - /srv/appdata:/source/appdata:rshared
       # Docker socket to list containers
       - /var/run/docker.sock:/var/run/docker.sock:ro
-
     ports:
       - 8200:8200
+      - 8201:8080
     restart: unless-stopped

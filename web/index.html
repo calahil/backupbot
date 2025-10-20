@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>BackupBot Configuration</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 2rem;
+      background: #f4f4f4;
+    }
+
+    label {
+      display: block;
+      margin-top: 1rem;
+    }
+
+    input {
+      width: 200px;
+    }
+
+    button {
+      margin-top: 1rem;
+      padding: 0.5rem 1rem;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>BackupBot Configuration</h1>
+
+  <form id="configForm">
+    <label>Timezone:
+      <input type="text" name="TZ">
+    </label>
+    <label>Backup Directory:
+      <input type="text" name="BACKUP_DIR">
+    </label>
+    <label>Log File:
+      <input type="text" name="LOG_FILE">
+    </label>
+    <label>Backup Hour:
+      <input type="number" name="BACKUP_HOUR" min="0" max="23">
+    </label>
+    <label>Backup Minute:
+      <input type="number" name="BACKUP_MINUTE" min="0" max="59">
+    </label>
+    <label>Max Retries:
+      <input type="number" name="MAX_RETRIES" min="1" max="10">
+    </label>
+    <label>Gotify URL:
+      <input type="text" name="GOTIFY_URL">
+    </label>
+    <label>Gotify Token:
+      <input type="text" name="GOTIFY_TOKEN">
+    </label>
+    <button type="submit">Save Configuration</button>
+  </form>
+
+  <p id="status"></p>
+
+  <script>
+    async function loadConfig() {
+      const res = await fetch('/config/web/backupbot.cgi?action=get');
+      const data = await res.json();
+      const form = document.getElementById('configForm');
+      Object.keys(data).forEach(key => {
+        if (form.elements[key]) form.elements[key].value = data[key];
+      });
+    }
+
+    async function saveConfig(e) {
+      e.preventDefault();
+      const formData = new FormData(document.getElementById('configForm'));
+      const obj = Object.fromEntries(formData.entries());
+      const res = await fetch('/config/web/backupbot.cgi?action=set', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(obj)
+      });
+      const result = await res.json();
+      document.getElementById('status').innerText = result.message;
+    }
+
+    document.getElementById('configForm').addEventListener('submit', saveConfig);
+    loadConfig();
+  </script>
+</body>
+
+</html>
