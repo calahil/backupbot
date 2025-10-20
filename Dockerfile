@@ -13,14 +13,16 @@ RUN apt-get -y update \
   && rm -rf /var/lib/apt/lists/*
 
 # Copy backup script
-COPY backup.sh /usr/local/bin/backup.sh \
-  && backup.cron /etc/cron.d/backup \ 
-  && startup.sh /usr/local/bin/startup.sh /
+COPY backup.sh /usr/local/bin/backup.sh
+RUN chmod +x /usr/local/bin/backup.sh
 
-RUN chmod +x /usr/local/bin/backup.sh \
-  && chmod 0644 /etc/cron.d/backup \
-  && crontab /etc/cron.d/backup \
-  && chmod +x /usr/local/bin/startup.sh
+COPY backup.cron /etc/cron.d/backup
+RUN chmod 0644 /etc/cron.d/backup \
+  && crontab /etc/cron.d/backup
+
+
+COPY startup.sh /usr/local/bin/startup.sh 
+RUN chmod +x /usr/local/bin/startup.sh
 
 # Use bash as default
 ENTRYPOINT ["/usr/local/bin/startup.sh"]
