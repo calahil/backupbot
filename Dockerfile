@@ -26,7 +26,6 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/* \
   && mkdir -p /usr/local/bin /config /etc/services.d/backupbot
 
-# Copy the backup script
 COPY backup.sh /usr/local/bin/backup.sh
 RUN chmod +x /usr/local/bin/backup.sh
 
