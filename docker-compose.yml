@@ -17,7 +17,6 @@ services:
       - /srv/backups:/backups:rshared
       # Docker socket to list containers
       - /var/run/docker.sock:/var/run/docker.sock:ro
-
     ports:
       - 8200:8200
       - 8201:8080

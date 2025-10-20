@@ -1,4 +1,3 @@
-# Use LinuxServer.io Duplicati base
 FROM linuxserver/duplicati:2.1.0
 
 # Install Docker CLI, bash, python3, btrfs support and all the app directories
