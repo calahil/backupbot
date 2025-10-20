@@ -25,9 +25,9 @@ RUN install -d /usr/share/postgresql-common/pgdg \
   && apt-get install -y --no-install-recommends \
   cron \
   bash \
-  ca-certificates \
-  curl \
+  ssl-cert \
   docker-ce-cli \
+  postgresql-common \
   postgresql-17 \
   && rm -rf /var/lib/apt/lists/* \
   && mkdir -p /backups
