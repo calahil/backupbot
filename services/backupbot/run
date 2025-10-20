@@ -1,14 +1,17 @@
 #!/usr/bin/env bash
 set -e
 
-echo "[BACKUPBOT_INFO] Starting PostgreSQL backup loop service..."
+LOG_FILE="/config/log/backupbot.log"
+mkdir -p "$(dirname "$LOG_FILE")"
 
-# Optional configurable interval (default 24 hours)
+echo "[BACKUPBOT_INFO] Starting PostgreSQL backup loop service..." | tee -a "$LOG_FILE"
+
 INTERVAL_HOURS="${INTERVAL_HOURS:-24}"
 
+# Stay alive forever
 while true; do
-  echo "[BACKUPBOT_INFO] Triggering backup.sh at $(date)"
-  /usr/local/bin/backup.sh >>/config/log/backupbot.log 2>&1
-  echo "[BACKUPBOT_INFO] Sleeping for $INTERVAL_HOURS hours..."
+  echo "[BACKUPBOT_INFO] Triggering backup.sh at $(date)" | tee -a "$LOG_FILE"
+  /usr/local/bin/backup.sh >>"$LOG_FILE" 2>&1
+  echo "[BACKUPBOT_INFO] Sleeping for $INTERVAL_HOURS hours..." | tee -a "$LOG_FILE"
   sleep "${INTERVAL_HOURS}h"
 done
