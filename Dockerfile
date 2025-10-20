@@ -28,7 +28,7 @@ RUN install -d /usr/share/postgresql-common/pgdg \
   ca-certificates \
   curl \
   docker-ce-cli \
-  postrgresql-17 \
+  postgresql-17 \
   && rm -rf /var/lib/apt/lists/* \
   && mkdir -p /backups
 
