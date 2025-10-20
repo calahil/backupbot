@@ -12,6 +12,11 @@ else
   source /config/backupbot.conf
   set +a
 fi
+# Initialize default web interface if missing
+if [ ! -d /config/web ]; then
+  echo "[INFO] Populating /config/web from defaults..."
+  cp -r /defaults/web /config/
+fi
 
 # Start Python HTTP server for web config in background
 cd /app
