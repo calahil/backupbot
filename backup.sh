@@ -4,7 +4,7 @@
 # Author: Calahil Studios
 
 # === CONFIGURATION ===
-BACKUP_DIR="/backups/postgres"
+BACKUP_DIR="/backups/postgres_dumps"
 INTERVAL_HOURS="${INTERVAL_HOURS:-24}" # Default to 24 hours if not set
 RETENTION_DAYS="${RETENTION_DAYS:-7}"  # Keep 7 days of backups
 
@@ -14,7 +14,6 @@ KNOWN_IMAGES=$(
 postgres:17.0-alpine
 postgres:17
 postgres
-lscr.io/linuxserver/postgres
 postgres:14.0-alpine
 ghcr.io/immich-app/postgres:14-vectorchord0.4.3-pgvectors0.2.0
 EOF
@@ -64,6 +63,8 @@ while true; do
       find "$CONTAINER_BACKUP_DIR" -type f -mtime +$RETENTION_DAYS -name '*.sql' -delete
     done
   fi
+
+  btrfs subvolume snapshot -r /mnt/backups/prodesk /mnt/backups/prodesk-$(date +%F)
 
   echo "[INFO] Backup cycle complete."
   echo "[INFO] Sleeping for ${INTERVAL_HOURS}h..."
