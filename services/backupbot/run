@@ -11,7 +11,7 @@ INTERVAL_HOURS="${INTERVAL_HOURS:-24}"
 # Stay alive forever
 while true; do
   echo "[BACKUPBOT_INFO] Triggering backup.sh at $(date)" | tee -a "$LOG_FILE"
-  /usr/local/bin/backup.sh >>"$LOG_FILE" 2>&1
+  /usr/local/bin/backup.sh "$LOG_FILE"
   echo "[BACKUPBOT_INFO] Sleeping for $INTERVAL_HOURS hours..." | tee -a "$LOG_FILE"
   sleep "${INTERVAL_HOURS}h"
 done
