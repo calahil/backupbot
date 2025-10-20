@@ -64,7 +64,7 @@ while true; do
     done
   fi
 
-  btrfs subvolume snapshot -r /mnt/backups/prodesk /mnt/backups/prodesk-$(date +%F)
+  btrfs subvolume snapshot -r /source/appdata /backups/snapshots/$(hostname)-$(date +%F)
 
   echo "[INFO] Backup cycle complete."
   echo "[INFO] Sleeping for ${INTERVAL_HOURS}h..."
