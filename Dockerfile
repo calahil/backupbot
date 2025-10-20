@@ -17,18 +17,11 @@ RUN apt-get update -y \
   tee /etc/apt/sources.list.d/docker.list > /dev/null \
   && apt-get update -y
 
-RUN install -d /usr/share/postgresql-common/pgdg \
-  && curl -o /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc --fail https://www.postgresql.org/media/keys/ACCC4CF8.asc \
-  && . /etc/os-release \
-  && sh -c "echo 'deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] https://apt.postgresql.org/pub/repos/apt $VERSION_CODENAME-pgdg main' > /etc/apt/sources.list.d/pgdg.list" \
-  && apt-get update -y \
-  && apt-get install -y --no-install-recommends \
+RUN apt-get install -y --no-install-recommends \
   cron \
   bash \
-  ssl-cert \
   docker-ce-cli \
-  postgresql-common \
-  postgresql-17 \
+  postgresql-16 \
   && rm -rf /var/lib/apt/lists/* \
   && mkdir -p /backups
 
