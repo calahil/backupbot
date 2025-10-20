@@ -7,7 +7,7 @@ import json
 cgitb.enable()
 print("Content-Type: application/json\n")
 
-ENV_FILE = "/config/web/backupbot.env"
+ENV_FILE = "/config/backupbot.env"
 
 
 def read_env():

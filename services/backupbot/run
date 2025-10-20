@@ -42,7 +42,7 @@ run_backup() {
   local attempt=1
   while ((attempt <= RETRIES)); do
     echo "[INFO] Backup attempt $attempt"
-    if /usr/local/bin/backup.sh >>"$LOG_FILE" 2>&1; then
+    if /usr/local/bin/backup.sh "$LOG_FILE"; then
       echo "[SUCCESS] Backup completed"
       return 0
     else
