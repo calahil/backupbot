@@ -5,8 +5,7 @@
 
 # === CONFIGURATION ===
 BACKUP_DIR="/backups/postgres_dumps"
-INTERVAL_HOURS="${INTERVAL_HOURS:-24}" # Default to 24 hours if not set
-RETENTION_DAYS="${RETENTION_DAYS:-7}"  # Keep 7 days of backups
+RETENTION_DAYS="${RETENTION_DAYS:-7}" # Keep 7 days of backups
 
 # List of known image name patterns
 KNOWN_IMAGES=$(
@@ -22,52 +21,48 @@ EOF
 echo "[INFO] Starting PostgreSQL backup service..."
 mkdir -p "$BACKUP_DIR"
 
-while true; do
-  TIMESTAMP=$(date +'%Y-%m-%d_%H-%M-%S')
-  echo "[INFO] $(date) - Starting backup cycle ($TIMESTAMP)"
-  echo "[INFO] Checking for running Postgres containers..."
+TIMESTAMP=$(date +'%Y-%m-%d_%H-%M-%S')
+echo "[INFO] $(date) - Starting backup cycle ($TIMESTAMP)"
+echo "[INFO] Checking for running Postgres containers..."
 
-  # Find running containers matching known image names
-  MATCHING_CONTAINERS=$(
-    docker ps --format "{{.ID}} {{.Image}}" | while read -r ID IMAGE; do
-      for pattern in $KNOWN_IMAGES; do
-        case "$IMAGE" in
-        *"$pattern"*)
-          echo "$ID"
-          break
-          ;;
-        esac
-      done
+# Find running containers matching known image names
+MATCHING_CONTAINERS=$(
+  docker ps --format "{{.ID}} {{.Image}}" | while read -r ID IMAGE; do
+    for pattern in $KNOWN_IMAGES; do
+      case "$IMAGE" in
+      *"$pattern"*)
+        echo "$ID"
+        break
+        ;;
+      esac
     done
-  )
+  done
+)
 
-  if [ -z "$MATCHING_CONTAINERS" ]; then
-    echo "[WARN] No Postgres containers found."
-  else
-    for container in $MATCHING_CONTAINERS; do
-      NAME=$(docker inspect --format '{{.Name}}' "$container" | sed 's#^/##')
-      CONTAINER_BACKUP_DIR="$BACKUP_DIR/$NAME"
-      FILE="$CONTAINER_BACKUP_DIR/${TIMESTAMP}.sql"
+if [ -z "$MATCHING_CONTAINERS" ]; then
+  echo "[WARN] No Postgres containers found."
+else
+  for container in $MATCHING_CONTAINERS; do
+    NAME=$(docker inspect --format '{{.Name}}' "$container" | sed 's#^/##')
+    CONTAINER_BACKUP_DIR="$BACKUP_DIR/$NAME"
+    FILE="$CONTAINER_BACKUP_DIR/${TIMESTAMP}.sql"
 
-      mkdir -p "$CONTAINER_BACKUP_DIR"
+    mkdir -p "$CONTAINER_BACKUP_DIR"
 
-      echo "[INFO] Backing up container: $NAME ($container)"
-      PG_USER=$(docker inspect --format '{{range .Config.Env}}{{println .}}{{end}}' "$container" | grep POSTGRES_USER | cut -d= -f2)
-      PG_PASS=$(docker inspect --format '{{range .Config.Env}}{{println .}}{{end}}' "$container" | grep POSTGRES_PASSWORD | cut -d= -f2)
-      if docker exec -e PGPASSWORD="$PG_PASS" "$container" pg_dumpall -U "$PG_USER" -h 127.0.0.1 >"$FILE" 2>/tmp/pg_backup_error.log; then
-        echo "[SUCCESS] Backup complete for $NAME -> $FILE"
-      else
-        echo "[ERROR] Backup failed for $NAME (check /tmp/pg_backup_error.log)"
-      fi
-      # Retention cleanup
-      find "$CONTAINER_BACKUP_DIR" -type f -mtime +$RETENTION_DAYS -name '*.sql' -delete
-    done
-  fi
+    echo "[INFO] Backing up container: $NAME ($container)"
+    PG_USER=$(docker inspect --format '{{range .Config.Env}}{{println .}}{{end}}' "$container" | grep POSTGRES_USER | cut -d= -f2)
+    PG_PASS=$(docker inspect --format '{{range .Config.Env}}{{println .}}{{end}}' "$container" | grep POSTGRES_PASSWORD | cut -d= -f2)
+    if docker exec -e PGPASSWORD="$PG_PASS" "$container" pg_dumpall -U "$PG_USER" -h 127.0.0.1 >"$FILE" 2>/tmp/pg_backup_error.log; then
+      echo "[SUCCESS] Backup complete for $NAME -> $FILE"
+    else
+      echo "[ERROR] Backup failed for $NAME (check /tmp/pg_backup_error.log)"
+    fi
+    # Retention cleanup
+    find "$CONTAINER_BACKUP_DIR" -type f -mtime +$RETENTION_DAYS -name '*.sql' -delete
+  done
+fi
 
-  echo "[INFO] Creating a snapshot of /srv/appdata"
-  btrfs subvolume snapshot -r /source/appdata /backups/snapshots/$(hostname)-$(date +%F)
+echo "[INFO] Creating a snapshot of /srv/appdata"
+btrfs subvolume snapshot -r /source/appdata /backups/snapshots/$(hostname)-$(date +%F)
 
-  echo "[INFO] Backup cycle complete."
-  echo "[INFO] Sleeping for ${INTERVAL_HOURS}h..."
-  sleep "${INTERVAL_HOURS}h"
-done
+echo "[INFO] Backup cycle complete."
