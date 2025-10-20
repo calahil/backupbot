@@ -4,12 +4,22 @@ services:
     container_name: backupbot
     privileged: true
     environment:
+      - PUID=0
+      - PGID=0
       - TZ=Etc/UTC
+      - SETTINGS_ENCRYPTION_KEY=${KEY}
+      - CLI_ARGS= #optional
+      - DUPLICATI__WEBSERVICE_PASSWORD=${PASSWORD}
     volumes:
-      # Backup folder to store dumps (accessible by Duplicati)
+      # Config dir for duplicati
+      - /srv/appdata/duplicati/config:/config
+      # Backup folder to store dumps/backups
       - /srv/backups:/backups
       # Local docker config dirs
       - /srv/appdata:/source/appdata:rshared
       # Docker socket to list containers
       - /var/run/docker.sock:/var/run/docker.sock:ro
+
+    ports:
+      - 8200:8200
     restart: unless-stopped

@@ -64,6 +64,7 @@ while true; do
     done
   fi
 
+  echo "[INFO] Creating a snapshot of /srv/appdata"
   btrfs subvolume snapshot -r /source/appdata /backups/snapshots/$(hostname)-$(date +%F)
 
   echo "[INFO] Backup cycle complete."
