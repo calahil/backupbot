@@ -2,7 +2,7 @@
 FROM postgres:17-alpine
 
 # Install Docker CLI + bash + core utilities
-RUN apk add --no-cache docker-cli bash coreutils btrfs-prog \
+RUN apk add --no-cache docker-cli bash coreutils btrfs-progs \
   && mkdir -p /backups
 
 # Copy backup script
