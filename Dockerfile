@@ -12,7 +12,7 @@ RUN apt-get update && \
   rm -rf /var/lib/apt/lists/*
 
 # Create directories for backup scripts and logs
-RUN mkdir -p /usr/local/bin /config/log /config/web /etc/services/backupbot
+RUN mkdir -p /usr/local/bin /config/log /config/web /etc/services.d/backupbot
 
 # Copy backup script
 COPY backup.sh /usr/local/bin/backup.sh
@@ -22,8 +22,8 @@ RUN chmod +x /usr/local/bin/backup.sh
 COPY backupbot.env /config/backupbot.env
 
 # Copy s6 service for backupbot
-COPY services/backupbot/run /etc/services/backupbot/run
-RUN chmod +x /etc/services/backupbot/run
+COPY services/backupbot/run /etc/services.d/backupbot/run
+RUN chmod +x /etc/services.d/backupbot/run
 
 # Copy web frontend
 COPY web/ /config/web/
