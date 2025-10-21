@@ -20,7 +20,7 @@ COPY backup.sh /usr/local/bin/backup.sh
 RUN chmod +x /usr/local/bin/backup.sh
 
 # Copy the environment variables for the config
-COPY backupbot.env /config/backupbot.env
+COPY backupbot.env /defaults/backupbot.env
 
 # Copy s6 service for backupbot
 COPY services/backupbot/run /etc/services.d/backupbot/run
