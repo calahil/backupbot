@@ -8,6 +8,7 @@ RUN apt-get update && \
   python3 \
   python3-pip \
   docker.io \
+  btrfs-progs \
   ca-certificates curl && \
   rm -rf /var/lib/apt/lists/*
 
