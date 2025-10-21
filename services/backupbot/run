@@ -6,7 +6,7 @@ if [[ -f /config/backupbot.env ]]; then
 else
   echo "[INFO] copying env vars from defaults..."
   cp -r /defaults/backupbot.env /config/
-  export $(grep -V '^#' /config/backupbot.env)
+  export $(grep -V '^#' /config/backupbot.env | xargs)
 fi
 # Initialize default web interface if missing
 if [ ! -d /config/web ]; then
