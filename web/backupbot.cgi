@@ -16,9 +16,12 @@ def read_env():
         with open(ENV_FILE) as f:
             for line in f:
                 line = line.strip()
-                if line and not line.startswith("#") and "=" in line:
-                    key, val = line.split("=", 1)
-                    env[key.strip()] = val.strip()
+                if not line or line.startswith("#") or "=" not in line:
+                    continue
+                key, val = line.split("=", 1)
+                key = key.strip()
+                val = val.strip().split("#")[0].strip()  # strip inline comments
+                env[key] = val
     return env
 
 
