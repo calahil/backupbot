@@ -1,5 +1,5 @@
 # Use LinuxServer.io Duplicati base
-FROM ghcr.io/linuxserver/duplicati:2.1.0
+FROM ghcr.calahilstudios.com/linuxserver/duplicati:2.1.0
 
 # Install Docker CLI, bash, python3
 RUN apt-get update && \
