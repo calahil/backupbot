@@ -32,7 +32,9 @@
 
   <form id="configForm">
     <label>Timezone:
-      <input type="text" name="TZ">
+      <select id="tzSelect" name="TZ">
+        <option value="">Loading...</option>
+      </select>
     </label>
     <label>Backup Directory:
       <input type="text" name="BACKUP_DIR">
@@ -61,6 +63,19 @@
   <p id="status"></p>
 
   <script>
+    async function loadTimezones() {
+      const res = await fetch('/cgi-bin/backupbot.cgi?action=get_timezones');
+      const data = await res.json();
+      const select = document.getElementById('tzSelect');
+      select.innerHTML = '';
+      data.timezones.forEach(tz => {
+        const opt = document.createElement('option');
+        opt.value = tz;
+        opt.textContent = tz;
+        select.appendChild(opt);
+      });
+    }
+
     async function loadConfig() {
       const res = await fetch('/cgi-bin/backupbot.cgi?action=get');
       const data = await res.json();

@@ -3,48 +3,64 @@ import cgi
 import cgitb
 import os
 import json
-from pathlib import Path
+import glob
 
 cgitb.enable()
-
-ENV_FILE = Path("/config/backupbot.env")
 print("Content-Type: application/json\n")
+
+ENV_FILE = "/config/backupbot.env"
+ZONEINFO_DIR = "/usr/share/zoneinfo"
 
 
 def read_env():
     env = {}
-    if ENV_FILE.exists():
-        with ENV_FILE.open() as f:
+    if os.path.exists(ENV_FILE):
+        with open(ENV_FILE) as f:
             for line in f:
                 line = line.strip()
                 if not line or line.startswith("#") or "=" not in line:
                     continue
                 key, val = line.split("=", 1)
-                env[key.strip()] = val.strip().split("#")[0].strip()
+                key = key.strip()
+                val = val.strip().split("#")[0].strip()
+                env[key] = val
     return env
 
 
 def write_env(env):
-    # Rotate the old env file just in case
-    if ENV_FILE.exists():
-        ENV_FILE.replace(ENV_FILE.with_suffix(".env.bak"))
-    with ENV_FILE.open("w") as f:
+    with open(ENV_FILE, "w") as f:
         for key, val in env.items():
             f.write(f"{key}={val}\n")
+
+
+def list_timezones():
+    zones = []
+    for root, _, files in os.walk(ZONEINFO_DIR):
+        rel_root = os.path.relpath(root, ZONEINFO_DIR)
+        if rel_root.startswith("posix") or rel_root.startswith("right"):
+            continue
+        for file in files:
+            if file.startswith(".") or file.endswith((".tab", ".zi")):
+                continue
+            zones.append(os.path.join(rel_root, file) if rel_root != "." else file)
+    return sorted(zones)
 
 
 form = cgi.FieldStorage()
 action = form.getvalue("action")
 
-try:
-    if action == "get":
-        print(json.dumps(read_env()))
-    elif action == "set":
-        length = int(os.environ.get("CONTENT_LENGTH", "0"))
+if action == "get":
+    print(json.dumps(read_env()))
+elif action == "set":
+    try:
+        raw = os.environ.get("CONTENT_LENGTH")
+        length = int(raw) if raw else 0
         data = json.loads(os.read(0, length))
         write_env(data)
         print(json.dumps({"status": "ok", "message": "Configuration saved."}))
-    else:
-        print(json.dumps({"status": "error", "message": "Invalid action"}))
-except Exception as e:
-    print(json.dumps({"status": "error", "message": str(e)}))
+    except Exception as e:
+        print(json.dumps({"status": "error", "message": str(e)}))
+elif action == "get_timezones":
+    print(json.dumps({"timezones": list_timezones()}))
+else:
+    print(json.dumps({"status": "error", "message": "Invalid action"}))
