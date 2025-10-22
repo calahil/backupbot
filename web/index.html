@@ -62,7 +62,7 @@
 
   <script>
     async function loadConfig() {
-      const res = await fetch('/config/web/backupbot.cgi?action=get');
+      const res = await fetch('/cgi-bin/backupbot.cgi?action=get');
       const data = await res.json();
       const form = document.getElementById('configForm');
       Object.keys(data).forEach(key => {
@@ -74,7 +74,7 @@
       e.preventDefault();
       const formData = new FormData(document.getElementById('configForm'));
       const obj = Object.fromEntries(formData.entries());
-      const res = await fetch('/config/web/backupbot.cgi?action=set', {
+      const res = await fetch('/cgi-bin/backupbot.cgi?action=set', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(obj)

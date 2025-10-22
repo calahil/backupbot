@@ -28,7 +28,7 @@ RUN chmod +x /etc/services.d/backupbot/run
 
 # Copy web frontend
 COPY web /defaults/web
-RUN chmod +x /defaults/web/backupbot.cgi
+RUN chmod +x /defaults/web/cgi-bin/backupbot.cgi
 # Expose web frontend port
 EXPOSE 8080
 
