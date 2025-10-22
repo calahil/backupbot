@@ -37,10 +37,12 @@
       </select>
     </label>
     <label>Backup Directory:
-      <input type="text" name="BACKUP_DIR">
+      <input type="text" name="BACKUP_DIR" id="backupDir" placeholder="/backups">
+      <button type="button" onclick="chooseBackupDir()">Browse</button>
     </label>
     <label>Log File:
-      <input type="text" name="LOG_FILE">
+      <input type="text" name="LOG_FILE" id="logDir" placeholder="/config/log">
+      <button type="button" onclick="chooseLogDir()">Browse</button>
     </label>
     <label>Backup Hour:
       <input type="number" name="BACKUP_HOUR" min="0" max="23">
@@ -76,6 +78,16 @@
       });
     }
 
+    function chooseBackupDir() {
+      const base = prompt("Enter or confirm your backup directory path:", "/backups");
+      if (base) document.getElementById('backupDir').value = base;
+    }
+
+    function chooseLogDir() {
+      const base = prompt("Enter or confirm your log directory path:", "/config/log");
+      if (base) document.getElementById('logDir').value = base;
+    }
+
     async function loadConfig() {
       const res = await fetch('/cgi-bin/backupbot.cgi?action=get');
       const data = await res.json();
@@ -99,7 +111,7 @@
     }
 
     document.getElementById('configForm').addEventListener('submit', saveConfig);
-    loadConfig();
+    loadTimezones().then(loadConfig);
   </script>
 </body>
 

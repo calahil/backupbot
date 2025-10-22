@@ -1,37 +1,25 @@
 #!/usr/bin/with-contenv bash
 set -e
 # Source env if available
-if [[ -f /config/backupbot.env ]]; then
+if [[ -f /config/backupbot.conf ]]; then
   set -a
-  source /config/backupbot.env
+  source /config/backupbot.conf
   set +a
 else
-  echo "[INFO] copying env vars from defaults..."
-  cp -r /defaults/backupbot.env /config/
+  echo "[INFO] copying config vars from defaults..."
+  cp -r /defaults/backupbot.conf /config/
   set -a
-  source /config/backupbot.env
+  source /config/backupbot.conf
   set +a
-fi
-# Initialize default web interface if missing
-if [ ! -d /config/web ]; then
-  echo "[INFO] Populating /config/web from defaults..."
-  cp -r /defaults/web /config/
 fi
 
 # Start Python HTTP server for web config in background
-cd /config/web
+cd /app
 
-if [ ! -f /config/log/web.log ]; then
-  mkdir -p /config/log
-  touch /config/log/web.log
-fi
-
-nohup python3 -m http.server 8080 --cgi >/config/log/web.log 2>&1 &
+nohup python3 -m http.server 8080 --cgi 2>&1 &
 
 # Start backup scheduler
 STATE_FILE="/config/last_backup_date"
-LOG_FILE="/config/log/pgbackup.log"
-mkdir -p "$(dirname "$STATE_FILE")" "$(dirname "$LOG_FILE")"
 
 # TZ
 : "${TZ:=UTC}"
@@ -56,7 +44,7 @@ run_backup() {
   local attempt=1
   while ((attempt <= RETRIES)); do
     echo "[INFO] Backup attempt $attempt"
-    if /usr/local/bin/backup.sh "$LOG_FILE"; then
+    if /usr/local/bin/backup.sh; then
       echo "[SUCCESS] Backup completed"
       return 0
     else

@@ -4,8 +4,8 @@ services:
     container_name: backupbot
     privileged: true
     environment:
-      - PUID=0
-      - PGID=0
+      - PUID=1000
+      - PGID=1000
       - TZ=Etc/UTC
       - SETTINGS_ENCRYPTION_KEY=${KEY}
       - CLI_ARGS= #optional
