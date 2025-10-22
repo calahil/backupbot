@@ -20,6 +20,12 @@ fi
 
 # Start Python HTTP server for web config in background
 cd /config/web
+
+if [ ! -f /config/log/web.log ]; then
+  mkdir -p /config/log
+  touch /config/log/web.log
+fi
+
 nohup python3 -m http.server 8080 --cgi >/config/log/web.log 2>&1 &
 
 # Start backup scheduler
