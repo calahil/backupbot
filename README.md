@@ -5,7 +5,7 @@
 [![Build Status](https://gitea.calahilstudios.com/api/badges/calahil/backupbot/status.svg)](https://gitea.calahilstudios.com/calahil/backupbot)
 [![Gitea](https://img.shields.io/badge/Gitea-calahilstudios.com-609926?logo=gitea&logoColor=white)](https://gitea.calahilstudios.com)
 [![Scarf.io pulls](https://scarf.sh/installs-badge/linuxserver-ci/linuxserver%2Fduplicati?color=94398d&label-color=555555&logo-color=ffffff&style=for-the-badge&package-type=docker)](https://scarf.sh)
-[![Gitea Stars](https://img.shields.io/badge/Gitea-calahilstudios.com-609926?logo=gitea&logoColor=white)](https://gitea.calahilstudios.com/calahil/backupbot)
+[![Gitea Stars](https://img.shields.io/gitea/stars/calahil/backupbot?gitea_url=https%3A%2F%2Fgitea.calahilstudios.net&logo=gitea)](https://gitea.calahilstudios.com/calahil/backupbot)
 [![GitHub Release](https://img.shields.io/github/release/linuxserver/docker-duplicati.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&logo=github)](https://github.com/linuxserver/docker-duplicati/releases)
 [![GitHub Package Repository](https://img.shields.io/static/v1.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=linuxserver.io&message=GitHub%20Package&logo=github)](https://github.com/linuxserver/docker-duplicati/packages)
 [![GitLab Container Registry](https://img.shields.io/static/v1.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=linuxserver.io&message=GitLab%20Registry&logo=gitlab)](https://gitlab.com/linuxserver.io/docker-duplicati/container_registry)
