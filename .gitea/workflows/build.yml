@@ -9,9 +9,7 @@ on:
 
 jobs:
   build-and-push-image:
-    runs-on: ubuntu-latest
-    container:
-      image: catthehacker/ubuntu:act-latest
+    runs-on: prodesk
 
     steps:
       - name: Checkout repository
@@ -46,8 +44,9 @@ jobs:
           echo "DOCKER_TAGS=${TAGS}" >> $GITEA_ENV
 
       - name: Build and push Docker image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: .
+          file: ./Dockerfile
           push: true
           tags: ${{ steps.prepare_tags.outputs.DOCKER_TAGS }}
