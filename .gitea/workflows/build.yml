@@ -30,7 +30,7 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: |
+          tags: >-
             calahilstudios/${{ github.repository_owner }}/${{ github.event.repository.name }}:latest
             calahilstudios/${{ github.repository_owner }}/${{ github.event.repository.name }}:${{ github.sha }}
-            ${{ github.event.ref_type == 'tag' && github.ref_name.startsWith('v') && format('calahilstudios/{0}/{1}:{2}', github.repository_owner, github.event.repository.name, github.ref_name) || '' }}
+            ${{ github.ref_type == 'tag' && startsWith(github.ref_name, 'v') && format('calahilstudios/{0}/{1}:{2}', github.repository_owner, github.event.repository.name, github.ref_name) }}
