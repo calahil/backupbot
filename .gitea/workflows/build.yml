@@ -1,16 +1,15 @@
-name: Docker Image CI
+name: Build and Push Docker Image
 
 on:
   push:
     branches:
-      - "main"
+      - main
     tags:
-      - "*" # This triggers the workflow on any tag push
+      - "v*" # trigger on tags starting with "v"
 
 jobs:
-  build-and-push-image:
+  build:
     runs-on: prodesk
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -18,35 +17,20 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Log in to the Container registry
+      - name: Log in to Gitea Docker Registry
         uses: docker/login-action@v3
         with:
           registry: gitea.calahilstudios.com
           username: ${{ secrets.REGISTRY_USER }}
           password: ${{ secrets.REGISTRY_TOKEN }}
 
-      - name: Prepare tags
-        id: prepare_tags
-        run: |
-          # The image reference for your Gitea registry
-          IMAGE_REF=gitea.calahilstudios.com/calahil/backupbot
-
-          # The main tags: latest and commit SHA
-          TAGS="${IMAGE_REF}:latest,${IMAGE_REF}:${{ gitea.sha }}"
-
-          # If the event is a tag push, add the git tag as a tag
-          if [[ "${{ gitea.ref_type }}" == "tag" ]]; then
-            GIT_TAG_NAME=$(basename "${{ gitea.ref }}")
-            TAGS="${TAGS},${IMAGE_REF}:${GIT_TAG_NAME}"
-          fi
-
-          # Set the tags as a step output
-          echo "DOCKER_TAGS=${TAGS}" >> $GITEA_ENV
-
-      - name: Build and push Docker image
+      - name: Build and push image
         uses: docker/build-push-action@v6
         with:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ steps.prepare_tags.outputs.DOCKER_TAGS }}
+          tags: |
+            calahilstudios/${{ github.repository_owner }}/${{ github.event.repository.name }}:latest
+            calahilstudios/${{ github.repository_owner }}/${{ github.event.repository.name }}:${{ github.sha }}
+            ${{ github.event.ref_type == 'tag' && github.ref_name.startsWith('v') && format('calahilstudios/{0}/{1}:{2}', github.repository_owner, github.event.repository.name, github.ref_name) || '' }}
