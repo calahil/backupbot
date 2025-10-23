@@ -2,18 +2,12 @@
 
 [![License](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![Docker](https://img.shields.io/badge/Docker-Enabled-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
-[![Build Status](https://gitea.calahilstudios.com/api/badges/calahil/backupbot/status.svg)](https://gitea.calahilstudios.com/calahil/backupbot)
 [![Gitea](https://img.shields.io/badge/Gitea-calahilstudios.com-609926?logo=gitea&logoColor=white)](https://gitea.calahilstudios.com)
-[![Scarf.io pulls](https://scarf.sh/installs-badge/linuxserver-ci/linuxserver%2Fduplicati?color=94398d&label-color=555555&logo-color=ffffff&style=for-the-badge&package-type=docker)](https://scarf.sh)
-[![Gitea Stars](https://img.shields.io/gitea/stars/calahil/backupbot?gitea_url=https%3A%2F%2Fgitea.calahilstudios.net&logo=gitea)](https://gitea.calahilstudios.com/calahil/backupbot)
-[![GitHub Release](https://img.shields.io/github/release/linuxserver/docker-duplicati.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&logo=github)](https://github.com/linuxserver/docker-duplicati/releases)
-[![GitHub Package Repository](https://img.shields.io/static/v1.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=linuxserver.io&message=GitHub%20Package&logo=github)](https://github.com/linuxserver/docker-duplicati/packages)
-[![GitLab Container Registry](https://img.shields.io/static/v1.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=linuxserver.io&message=GitLab%20Registry&logo=gitlab)](https://gitlab.com/linuxserver.io/docker-duplicati/container_registry)
-[![Quay.io](https://img.shields.io/static/v1.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=linuxserver.io&message=Quay.io)](https://quay.io/repository/linuxserver.io/duplicati)
+![Gitea Stars](https://img.shields.io/gitea/stars/calahil/backupbot?gitea_url=https%3A%2F%2Fgitea.calahilstudios.com&logo=gitea&link=https%3A%2F%2Fgitea.calahilstudios.com)
+![Gitea Release](https://img.shields.io/gitea/v/release/calahil/backupbot?gitea_url=https%3A%2F%2Fgitea.calahilstudios.com&display_name=tag&logo=gitea&link=https%3A%2F%2Fgitea.calahilstudios.com%2Fcalahil%2Fbackupbot%2Freleases)
+
 [![Docker Pulls](https://img.shields.io/docker/pulls/linuxserver/duplicati.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=pulls&logo=docker)](https://hub.docker.com/r/linuxserver/duplicati)
 [![Docker Stars](https://img.shields.io/docker/stars/linuxserver/duplicati.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=stars&logo=docker)](https://hub.docker.com/r/linuxserver/duplicati)
-[![Jenkins Build](https://img.shields.io/jenkins/build?labelColor=555555&logoColor=ffffff&style=for-the-badge&jobUrl=https%3A%2F%2Fci.linuxserver.io%2Fjob%2FDocker-Pipeline-Builders%2Fjob%2Fdocker-duplicati%2Fjob%2Fmaster%2F&logo=jenkins)](https://ci.linuxserver.io/job/Docker-Pipeline-Builders/job/docker-duplicati/job/master/)
-[![LSIO CI](https://img.shields.io/badge/dynamic/yaml?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=CI&query=CI&url=https%3A%2F%2Fci-tests.linuxserver.io%2Flinuxserver%2Fduplicati%2Flatest%2Fci-status.yml)](https://ci-tests.linuxserver.io/linuxserver/duplicati/latest/index.html)
 
 > **Automated Docker backup system for PostgreSQL databases and application configurations with Duplicati integration**
 
