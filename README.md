@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![Docker](https://img.shields.io/badge/Docker-Enabled-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
-[![Build Status](https://gitea.calahilstudios.com/api/badges/owner/backupbot/status.svg)](https://gitea.calahilstudios.com/owner/backupbot)
+[![Build Status](https://gitea.calahilstudios.com/api/badges/calahil/backupbot/status.svg)](https://gitea.calahilstudios.com/calahil/backupbot)
 [![Gitea](https://img.shields.io/badge/Gitea-calahilstudios.com-609926?logo=gitea&logoColor=white)](https://gitea.calahilstudios.com)
 
 > **Automated Docker backup system for PostgreSQL databases and application configurations with Duplicati integration**
