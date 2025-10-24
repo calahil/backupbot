@@ -10,6 +10,7 @@ on:
 jobs:
   build:
     runs-on: prodesk
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -30,9 +31,10 @@ jobs:
           TAGS="calahilstudios/${{ github.repository_owner }}/${{ github.event.repository.name }}:latest"
           TAGS="$TAGS calahilstudios/${{ github.repository_owner }}/${{ github.event.repository.name }}:${{ github.sha }}"
 
-          # Only add tag if this is a v* tag push
-          if [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
-            TAGS="$TAGS calahilstudios/${{ github.repository_owner }}/${{ github.event.repository.name }}:${GITHUB_REF#refs/tags/}"
+          # Add version tag if this is a v* tag push
+          if [[ "${{ github.ref }}" == refs/tags/v* ]]; then
+            TAG_NAME="${{ github.ref_name }}"
+            TAGS="$TAGS calahilstudios/${{ github.repository_owner }}/${{ github.event.repository.name }}:${TAG_NAME}"
           fi
 
           echo "TAGS=$TAGS" >> $GITHUB_ENV
