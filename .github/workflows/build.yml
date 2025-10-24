@@ -41,6 +41,12 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITEA_TOKEN }}
 
+      - name: Debug GitHub context
+        run: |
+          echo "Owner: ${{ github.repository_owner }}"
+          echo "Repo:  ${{ github.event.repository.name }}"
+          echo "Full repo: ${{ github.repository }}"
+
       - name: Docker metadata
         id: meta
         uses: docker/metadata-action@v5
