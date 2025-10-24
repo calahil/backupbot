@@ -54,7 +54,7 @@ jobs:
           images: |
             ghcr.io/${{ github.repository }}
             gitea.calahilstudios.com/${{ github.repository }}
-            ${{ secrets.DOCKERHUB_USER }}/${{ github.repository }}
+            ${{ github.repository }}
           tags: |
             # Always include short SHA
             type=sha,format=short
