@@ -56,12 +56,15 @@ jobs:
             gitea.calahilstudios.com/${{ github.repository }}
             ${{ secrets.DOCKERHUB_USER }}/${{ github.repository }}
           tags: |
-            type=ref,event=branch
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=sha
+            # Always include short SHA
+            type=sha,format=short
+
+            # Include latest if on default branch (usually 'main' or 'develop')
             type=raw,value=latest,enable={{is_default_branch}}
 
+            # If this is a semver tag (vX.X.X), add full + minor version tags
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
