@@ -10,7 +10,6 @@ on:
 jobs:
   build:
     runs-on: prodesk
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -25,21 +24,17 @@ jobs:
           username: ${{ secrets.REGISTRY_USER }}
           password: ${{ secrets.REGISTRY_TOKEN }}
 
-      - name: Set Docker tags
-        id: docker-tags
-        run: |
-          TAGS="calahilstudios/${{ github.repository_owner }}/${{ github.event.repository.name }}:latest"
-          TAGS="$TAGS
-          calahilstudios/${{ github.repository_owner }}/${{ github.event.repository.name }}:${{ github.sha }}"
-
-          # Add version tag if this is a v* tag push
-          if [[ "${{ github.ref }}" == refs/tags/v* ]]; then
-            TAG_NAME="${{ github.ref_name }}"
-            TAGS="$TAGS
-          calahilstudios/${{ github.repository_owner }}/${{ github.event.repository.name }}:${TAG_NAME}"
-          fi
-
-          echo "TAGS=$TAGS" >> $GITHUB_ENV
+      - name: Docker metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: gitea.calahilstudios.com/${{ github.repository_owner }}/${{ github.event.repository.name }}
+          tags: |
+            type=ref,event=branch
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=sha
+            type=raw,value=latest,enable={{is_default_branch}}
 
       - name: Build and push image
         uses: docker/build-push-action@v6
@@ -47,4 +42,5 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ env.TAGS }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
