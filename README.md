@@ -3,10 +3,8 @@
 
 ![Docker Image Version (tag)](https://img.shields.io/docker/v/calahil/backupbot/latest?arch=amd64&style=for-the-badge&logo=docker&logoColor=white&labelColor=blue&color=green)
 ![Docker Pulls](https://img.shields.io/docker/pulls/calahil/backupbot?style=for-the-badge&logo=docker&logoColor=white&labelColor=blue&color=green)
-
 ![Docker Stars](https://img.shields.io/docker/stars/calahil/backupbot?style=for-the-badge&logo=docker&logoColor=white&labelColor=blue&color=green)
-
-![GitHub License](https://img.shields.io/github/license/calahil/backupbot?style=social&logo=github&link=https%3A%2F%2Fraw.githubusercontent.com%2Fcalahil%2Fbackupbot%2Frefs%2Fheads%2Fmain%2FLICENSE)
+![GitHub License](https://img.shields.io/github/license/calahil/backupbot?style=for-the-badge&logo=docker&logoColor=white&labelColor=blue&color=green)
 ![GitHub Release](https://img.shields.io/github/v/release/calahil/backupbot?display_name=release&style=for-the-badge&logo=github&labelColor=blue&color=green)
 
 
