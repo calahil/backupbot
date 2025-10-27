@@ -1,13 +1,14 @@
 # BackupBot 🤖
 
-[![License](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
-[![Docker](https://img.shields.io/badge/Docker-Enabled-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
-[![Gitea](https://img.shields.io/badge/Gitea-calahilstudios.com-609926?logo=gitea&logoColor=white)](https://gitea.calahilstudios.com)
-![Gitea Stars](https://img.shields.io/gitea/stars/calahil/backupbot?gitea_url=https%3A%2F%2Fgitea.calahilstudios.com&logo=gitea&link=https%3A%2F%2Fgitea.calahilstudios.com)
-![Gitea Release](https://img.shields.io/gitea/v/release/calahil/backupbot?gitea_url=https%3A%2F%2Fgitea.calahilstudios.com&display_name=tag&logo=gitea&link=https%3A%2F%2Fgitea.calahilstudios.com%2Fcalahil%2Fbackupbot%2Freleases)
 
-[![Docker Pulls](https://img.shields.io/docker/pulls/linuxserver/duplicati.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=pulls&logo=docker)](https://hub.docker.com/r/linuxserver/duplicati)
-[![Docker Stars](https://img.shields.io/docker/stars/linuxserver/duplicati.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=stars&logo=docker)](https://hub.docker.com/r/linuxserver/duplicati)
+![Docker Image Version (tag)](https://img.shields.io/docker/v/calahil/backupbot/latest?arch=amd64&style=for-the-badge&logo=docker&logoColor=white&labelColor=blue&color=green)
+![Docker Pulls](https://img.shields.io/docker/pulls/calahil/backupbot?style=for-the-badge&logo=docker&logoColor=white&labelColor=blue&color=green)
+
+![Docker Stars](https://img.shields.io/docker/stars/calahil/backupbot?style=for-the-badge&logo=docker&logoColor=white&labelColor=blue&color=green)
+
+![GitHub License](https://img.shields.io/github/license/calahil/backupbot?style=social&logo=github&link=https%3A%2F%2Fraw.githubusercontent.com%2Fcalahil%2Fbackupbot%2Frefs%2Fheads%2Fmain%2FLICENSE)
+![GitHub Release](https://img.shields.io/github/v/release/calahil/backupbot?display_name=release&style=for-the-badge&logo=github&labelColor=blue&color=green)
+
 
 > **Automated Docker backup system for PostgreSQL databases and application configurations with Duplicati integration**
 
